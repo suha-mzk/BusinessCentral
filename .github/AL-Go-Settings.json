@@ -1,6 +1,6 @@
 {
   "templateUrl": "https://github.com/microsoft/AL-Go-PTE@main",
-  "environmentPattern": "*",
+  "environmentPattern": "MAZIK-BC-SANDBOX",
   "environments": [
     {
       "name": "MAZIK-BC-SANDBOX",
