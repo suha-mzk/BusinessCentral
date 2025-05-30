@@ -1,16 +1,11 @@
 {
-  "type": "PTE",
-  "templateUrl": "https://github.com/microsoft/AL-Go-PTE@main",
-  "environments": [
-    {
-      "name": "MAZIK-BC-SANDBOX",
-      "url": "https://businesscentral.dynamics.com/cb8d0f5e-295e-44f1-8cab-184ae827c864/MAZIK-BC-SANDBOX",
-      "auth": {
-        "authType": "AzureAD",
-        "tenant": "cb8d0f5e-295e-44f1-8cab-184ae827c864",
-        "clientId": "20e84c3f-3e35-4231-83da-abb035bc0a5e",
-        "clientSecretName": "MAZIKBCSANDBOX_AuthContext"
-      }
-    }
-  ]
+  "name": "MAZIK-BC-SANDBOX",
+  "url": "https://businesscentral.dynamics.com/cb8d0f5e-295e-44f1-8cab-184ae827c864/MAZIK-BC-SANDBOX",
+  "company": "AJ Company",
+  "auth": {
+    "authType": "AzureAD",
+    "tenant": "cb8d0f5e-295e-44f1-8cab-184ae827c864",
+    "clientId": "20e84c3f-3e35-4231-83da-abb035bc0a5e",
+    "clientSecretName": "MAZIKBCSANDBOX_AuthContext"
+  }
 }
