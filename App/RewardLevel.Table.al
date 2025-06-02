@@ -1,4 +1,4 @@
-table 50100 "Reward Level"
+table 50108 "Reward Level"
 {
     fields
     {
