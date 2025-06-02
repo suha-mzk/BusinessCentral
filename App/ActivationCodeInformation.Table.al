@@ -7,7 +7,7 @@ table 50147 "Activation Code Information"
     {
         field(1; ActivationCode; Text[14])
         {
-            Caption = 'Activation Code';
+            Caption = 'Activatio Code';
             DataClassification = SystemMetadata;
             Description = 'Activation code used to activate Customer Rewards';
         }
