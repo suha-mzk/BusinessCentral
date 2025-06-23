@@ -1,7 +1,7 @@
 {
-  "id": "4bf4756f-e6a6-42a5-913b-d43096464a4f",
-  "name": "App",
-  "publisher": "suha",
+  "id": "7cab58cc-7b0c-4ab5-a6a2-e9060ff2abb4",
+  "name": "BusinessCentral",
+  "publisher": "Suha",
   "version": "1.0.0.0",
   "brief": "",
   "description": "",
@@ -13,19 +13,20 @@
   "dependencies": [],
   "screenshots": [],
   "platform": "1.0.0.0",
-  "application": "22.0.0.0",
+  "application": "21.0.0.0",
   "idRanges": [
     {
       "from": 50100,
       "to": 50149
     }
   ],
-  "features": [
-    "NoImplicitWith"
-  ],
   "resourceExposurePolicy": {
     "allowDebugging": true,
-    "allowDownloadingSource": false,
-    "includeSourceInSymbolFile": false
-  }
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "runtime": "10.0",
+  "features": [
+    "NoImplicitWith"
+  ]
 }
