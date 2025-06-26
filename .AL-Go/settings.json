@@ -3,7 +3,7 @@
   "appFolders": ["App"],
   "testFolders": [],
   "bcptTestFolders": [],
-  "ruleSetPath": "App/ruleset.json",
+  "rulesetFile": "App/ruleset.json",
   "enableCodeAnalysis": true,
   "enableExternalRulesets": true,
   "applicationDependency": "22.0.0.0"
