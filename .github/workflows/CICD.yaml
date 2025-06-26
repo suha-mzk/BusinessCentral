@@ -173,45 +173,20 @@ jobs:
           downloadLatest: true
           
   RunAnalyzers:
-    name: Run AL Best Practice Checks
-    needs: [ Initialization ]
+    needs: Initialization
     runs-on: windows-latest
-    if: (!failure()) && (!cancelled())
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Dump projects from Initialization
+        run: echo "Projects = ${{ needs.Initialization.outputs.projects }}"
 
-      - name: Setup AL Environment
-        uses: microsoft/AL-Go-Actions/SetupBuildEnvironment@v7.1
+      - name: Run Analyzers
+        uses: microsoft/AL-Go-Actions/RunAnalyzers@v7.1
         with:
           shell: powershell
-
-      - name: Read settings
-        uses: microsoft/AL-Go-Actions/ReadSettings@v7.1
-        with:
-          shell: powershell
-
-      - name: Run Analyzers (CodeCop, AppSourceCop, UICop)
-        run: |
-          $analyzers = "CodeCop", "AppSourceCop", "UICop"
-          $projectsJson = '${{ needs.Initialization.outputs.projects }}'
-          $projects = ($projectsJson | ConvertFrom-Json) | ForEach-Object { $_.path }
-      
-          foreach ($proj in $projects) {
-            Write-Host "Running analyzers on $proj"
-            alc `
-              /project:"$proj" `
-              /ruleset:"$proj\custom.ruleset.json" `
-              /analyzer:$(Join-Path $env:AL_HOME "Analyzers\Microsoft.Dynamics.Nav.CodeCop.dll") `
-              /analyzer:$(Join-Path $env:AL_HOME "Analyzers\Microsoft.Dynamics.Nav.AppSourceCop.dll") `
-              /analyzer:$(Join-Path $env:AL_HOME "Analyzers\Microsoft.Dynamics.Nav.UICop.dll") `
-              /nowarn:"AA0001,AA0002" `
-              /reportanalyzer:true `
-              /out:"$proj\analyzerOutput.txt"
-          }
-
+          projects: '["App"]'
+          
   Build:
-    needs: [ Initialization ]
+    needs: [ Initialization, RunAnalyzers ]
     if: (!failure()) && (!cancelled()) && fromJson(needs.Initialization.outputs.buildOrderJson)[0].projectsCount > 0
     strategy:
       matrix:
