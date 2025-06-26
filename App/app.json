@@ -23,6 +23,9 @@
   "features": [
     "NoImplicitWith"
   ],
+  "enableCodeAnalysis": true,
+  "codeAnalyzers": [ "CodeCop", "AppSourceCop", "PerTenantExtensionCop", "UgcCop" ],
+  "ruleSetPath": "ruleset.json",
   "resourceExposurePolicy": {
     "allowDebugging": true,
     "allowDownloadingSource": false,
