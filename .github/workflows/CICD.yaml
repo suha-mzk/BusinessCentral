@@ -194,11 +194,9 @@ jobs:
       - name: Run Analyzers (CodeCop, AppSourceCop, UICop)
         run: |
           $analyzers = "CodeCop", "AppSourceCop", "UICop"
-          $projects = @(${{
-            fromJson(needs.Initialization.outputs.projects)
-            | ForEach-Object { $_.path }
-          }})
-          
+          $projectsJson = '${{ needs.Initialization.outputs.projects }}'
+          $projects = ($projectsJson | ConvertFrom-Json) | ForEach-Object { $_.path }
+      
           foreach ($proj in $projects) {
             Write-Host "Running analyzers on $proj"
             alc `
