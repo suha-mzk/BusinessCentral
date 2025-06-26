@@ -180,11 +180,12 @@ jobs:
         run: echo "Projects = ${{ needs.Initialization.outputs.projects }}"
 
       - name: Run Analyzers
-        uses: microsoft/AL-Go-Actions/RunAnalyzers@v7.1
+        uses: microsoft/AL-Go-Actions/RunPipelineAction@v7.1
         with:
+          action: RunAnalyzers
           shell: powershell
-          projects: '["App"]'
-          
+          projects: ${{ needs.Initialization.outputs.projects }}
+    
   Build:
     needs: [ Initialization, RunAnalyzers ]
     if: (!failure()) && (!cancelled()) && fromJson(needs.Initialization.outputs.buildOrderJson)[0].projectsCount > 0
