@@ -171,9 +171,30 @@ jobs:
           templateUrl: ${{ env.templateUrl }}
           token: ${{ fromJson(steps.ReadSecrets.outputs.Secrets).ghTokenWorkflow }}
           downloadLatest: true
+  
+  PreCheck:
+    needs: [ Initialization ]
+    runs-on: windows-latest
+    name: PreCheck - Run AL Analyzers
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read settings
+        uses: microsoft/AL-Go-Actions/ReadSettings@v7.1
+        with:
+          shell: powershell
+
+      - name: Run AL Analyzers
+        uses: microsoft/AL-Go-Actions/RunAnalyzers@v7.1
+        with:
+          shell: powershell
+          projectsJson: '${{ needs.Initialization.outputs.projects }}'
+          outputWarnings: true
+          failOnError: false
 
   Build:
-    needs: [ Initialization ]
+    needs: [ Initialization, PreCheck ]
     if: (!failure()) && (!cancelled()) && fromJson(needs.Initialization.outputs.buildOrderJson)[0].projectsCount > 0
     strategy:
       matrix:
