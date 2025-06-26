@@ -1,4 +1,8 @@
 codeunit 50100 MyTestCodeunit
 {
-    // Missing prefix -> should trigger AA0001
+    trigger OnRun()
+    var
+        myVar: Integer; // <— missing prefix, should trigger AA0001
+    begin
+    end;
 }
