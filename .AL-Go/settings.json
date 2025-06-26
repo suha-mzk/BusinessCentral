@@ -1,8 +1,9 @@
 {
   "country": "us",
-  "appFolders": [],
+  "appFolders": ["App"],
   "testFolders": [],
   "bcptTestFolders": [],
   "ruleSetPath": "App/ruleset.json",
+  "enableCodeAnalysis": true,
   "enableExternalRulesets": true
 }
