@@ -3,13 +3,13 @@
     "description": "Recommended rules for Per-Tenant Extension development",
     "rules": [
       {
-        "id": "AA0001", "action": "Error"
+        "id": "AA0001", "action": "Warning"
       },
       {
         "id": "AA0002", "action": "Warning"
       },
       {
-        "id": "AA0003", "action": "Error"
+        "id": "AA0003", "action": "Warning"
       },
       {
         "id": "AA0004", "action": "Warning"
@@ -24,7 +24,7 @@
         "id": "AA0016", "action": "Warning"
       },
       {
-        "id": "AA0137", "action": "Error"
+        "id": "AA0137", "action": "Warning"
       },
       {
         "id": "AA0139", "action": "Warning"
@@ -34,6 +34,10 @@
       },
       {
         "id": "AA0134", "action": "Warning"  
+      },
+      {
+        "id": "AA0136", "action": "Warning"
       }
+      
     ]
   }  
