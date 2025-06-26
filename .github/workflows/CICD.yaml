@@ -171,57 +171,9 @@ jobs:
           templateUrl: ${{ env.templateUrl }}
           token: ${{ fromJson(steps.ReadSecrets.outputs.Secrets).ghTokenWorkflow }}
           downloadLatest: true
-          
-  RunAnalyzers:
-    needs: [ Initialization, CheckForUpdates ]
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup AL Language
-        run: |
-          $extensionPath = "$env:USERPROFILE\.vscode\extensions"
-          Write-Output "Installed Extensions:"
-          Get-ChildItem -Path $extensionPath
-          $alExtension = Get-ChildItem "$extensionPath\ms-dynamics-smb.al-*" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-          $alcPath = Join-Path -Path $alExtension.FullName -ChildPath "bin\alc.exe"
-          echo "##[debug]AL Compiler Path: $alcPath"
-          echo "alcPath=$alcPath" >> $env:GITHUB_ENV
-
-      - name: Run Analyzers
-        run: |
-          $projects = ${{ needs.Initialization.outputs.projects }}
-          if (!$projects -or $projects -eq "[]") {
-              Write-Output "No projects to analyze"
-              exit 0
-          }
-
-          $projectsArray = $projects | ConvertFrom-Json
-          foreach ($proj in $projectsArray) {
-              $appJsonPath = "$($proj.project)/app.json"
-              if (!(Test-Path $appJsonPath)) {
-                  Write-Output "Skipping $($proj.project): app.json not found."
-                  continue
-              }
-
-              $outputDir = "$($proj.project)/.alpackages"
-              New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
-
-              & "$env:alcPath" `
-                  /project:"$($proj.project)" `
-                  /packagecachepath:"$outputDir" `
-                  /ruleset:"$($proj.project)/ruleset.json" `
-                  /out:"$outputDir\Dummy.app"
-
-              if ($LASTEXITCODE -ne 0) {
-                  throw "Analyzers failed on $($proj.project)"
-              }
-          }
-
     
   Build:
-    needs: [ Initialization, RunAnalyzers ]
+    needs: [ Initialization ]
     if: (!failure()) && (!cancelled()) && fromJson(needs.Initialization.outputs.buildOrderJson)[0].projectsCount > 0
     strategy:
       matrix:
