@@ -171,30 +171,49 @@ jobs:
           templateUrl: ${{ env.templateUrl }}
           token: ${{ fromJson(steps.ReadSecrets.outputs.Secrets).ghTokenWorkflow }}
           downloadLatest: true
-  
-  PreCheck:
+          
+  RunAnalyzers:
+    name: Run AL Best Practice Checks
     needs: [ Initialization ]
     runs-on: windows-latest
-    name: PreCheck - Run AL Analyzers
+    if: (!failure()) && (!cancelled())
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup AL Environment
+        uses: microsoft/AL-Go-Actions/SetupBuildEnvironment@v7.1
+        with:
+          shell: powershell
 
       - name: Read settings
         uses: microsoft/AL-Go-Actions/ReadSettings@v7.1
         with:
           shell: powershell
 
-      - name: Run AL Analyzers
-        uses: microsoft/AL-Go-Actions/RunAnalyzers@v7.1
-        with:
-          shell: powershell
-          projectsJson: '${{ needs.Initialization.outputs.projects }}'
-          outputWarnings: true
-          failOnError: false
+      - name: Run Analyzers (CodeCop, AppSourceCop, UICop)
+        run: |
+          $analyzers = "CodeCop", "AppSourceCop", "UICop"
+          $projects = @(${{
+            fromJson(needs.Initialization.outputs.projects)
+            | ForEach-Object { $_.path }
+          }})
+          
+          foreach ($proj in $projects) {
+            Write-Host "Running analyzers on $proj"
+            alc `
+              /project:"$proj" `
+              /ruleset:"$proj\custom.ruleset.json" `
+              /analyzer:$(Join-Path $env:AL_HOME "Analyzers\Microsoft.Dynamics.Nav.CodeCop.dll") `
+              /analyzer:$(Join-Path $env:AL_HOME "Analyzers\Microsoft.Dynamics.Nav.AppSourceCop.dll") `
+              /analyzer:$(Join-Path $env:AL_HOME "Analyzers\Microsoft.Dynamics.Nav.UICop.dll") `
+              /nowarn:"AA0001,AA0002" `
+              /reportanalyzer:true `
+              /out:"$proj\analyzerOutput.txt"
+          }
 
   Build:
-    needs: [ Initialization, PreCheck ]
+    needs: [ Initialization ]
     if: (!failure()) && (!cancelled()) && fromJson(needs.Initialization.outputs.buildOrderJson)[0].projectsCount > 0
     strategy:
       matrix:
