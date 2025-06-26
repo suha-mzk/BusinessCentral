@@ -3,5 +3,6 @@
   "appFolders": [],
   "testFolders": [],
   "bcptTestFolders": [],
-  "ruleSetPath": "App/ruleset.json"
+  "ruleSetPath": "App/ruleset.json",
+  "enableExternalRulesets": true
 }
