@@ -172,22 +172,22 @@ jobs:
           token: ${{ fromJson(steps.ReadSecrets.outputs.Secrets).ghTokenWorkflow }}
           downloadLatest: true
           
-RunAnalyzers:
-  needs: Initialization
-  runs-on: windows-latest
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Dump projects from Initialization
-      run: echo "Projects = ${{ needs.Initialization.outputs.projects }}"
-
-    - name: Run Analyzers
-      shell: pwsh
-      run: |
-        .\AL-Go-Actions\RunPipelineAction.ps1 `
-          -action 'RunAnalyzers' `
-          -projects '${{ needs.Initialization.outputs.projects }}'
+  RunAnalyzers:
+    needs: Initialization
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+  
+      - name: Dump projects from Initialization
+        run: echo "Projects = ${{ needs.Initialization.outputs.projects }}"
+  
+      - name: Run Analyzers
+        shell: pwsh
+        run: |
+          .\AL-Go-Actions\RunPipelineAction.ps1 `
+            -action 'RunAnalyzers' `
+            -projects '${{ needs.Initialization.outputs.projects }}'
     
   Build:
     needs: [ Initialization, RunAnalyzers ]
