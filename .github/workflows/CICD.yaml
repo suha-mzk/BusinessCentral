@@ -180,7 +180,7 @@ jobs:
         run: echo "Projects = ${{ needs.Initialization.outputs.projects }}"
 
       - name: Run Analyzers
-        uses: microsoft/AL-Go-Actions/RunPipelineAction@v7.1
+        uses: microsoft/AL-Go-Actions/RunPipelineAction@main
         with:
           action: RunAnalyzers
           shell: powershell
