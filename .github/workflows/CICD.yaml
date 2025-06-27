@@ -387,13 +387,26 @@ jobs:
           $before = "${{ github.event.before }}"
           $after = "${{ github.sha }}"
           Write-Host "Getting commits from $before to $after"
-
-          $commits = git log $before..$after --pretty=format:'%h - %s (%an)' --no-merges
-          $commits = $commits -join "n"
-          $jsonBody = @{ commits = $commits } | ConvertTo-Json -Compress
-
-          Invoke-RestMethod 
-            -Method Post 
-            -Uri "https://prod-88.westus.logic.azure.com:443/workflows/892340e6cc3a4a36953644c5ed0cb30f/triggers/manual/paths/invoke?api-version=2016-06-01" 
-            -Body $jsonBody 
-            -ContentType "application/json"    
+          
+          if (-not (git rev-parse --quiet --verify $before)) {
+              Write-Warning "Commit $before not found. Skipping REST call."
+              return
+          }
+          
+          try {
+              $commits = git log $before..$after --pretty=format:'%h - %s (%an)' --no-merges
+              if (-not $commits) {
+                  Write-Warning "No commits found between $before and $after. Skipping REST call."
+                  return
+              }
+              $commits = $commits -join "`n"
+              $jsonBody = @{ commits = $commits } | ConvertTo-Json -Compress
+          
+              Invoke-RestMethod `
+                  -Method Post `
+                  -Uri "https://prod-88.westus.logic.azure.com:443/workflows/892340e6cc3a4a36953644c5ed0cb30f/triggers/manual/paths/invoke?api-version=2016-06-01" `
+                  -Body $jsonBody `
+                  -ContentType "application/json"
+          } catch {
+              Write-Error "Error sending commits to Power Automate: $_"
+          }
