@@ -385,31 +385,22 @@ jobs:
       - name: Fetch full git history
         run: git fetch --unshallow    
           
-      - name: Send release notes to Power Automate
+      - name: Send release notes to Power Automate (Test Latest Commit)
         run: |
-          $before = "${{ github.event.before }}"
-          $after = "${{ github.sha }}"
-          Write-Host "Getting commits from $before to $after"
-          
-          if (-not (git rev-parse --quiet --verify $before)) {
-              Write-Warning "Commit $before not found. Skipping REST call."
-              return
-          }
-          
           try {
-              $commits = git log $before..$after --pretty=format:'%h - %s (%an)' --no-merges
-              if (-not $commits) {
-                  Write-Warning "No commits found between $before and $after. Skipping REST call."
+              $commit = git log -1 --pretty=format:'%h - %s (%an)' --no-merges
+              if (-not $commit) {
+                  Write-Warning "No recent commit found. Skipping REST call."
                   return
               }
-              $commits = $commits -join "`n"
-              $jsonBody = @{ commits = $commits } | ConvertTo-Json -Compress
-          
+      
+              $jsonBody = @{ commits = $commit } | ConvertTo-Json -Compress
+      
               Invoke-RestMethod `
                   -Method Post `
                   -Uri "https://prod-88.westus.logic.azure.com:443/workflows/892340e6cc3a4a36953644c5ed0cb30f/triggers/manual/paths/invoke?api-version=2016-06-01" `
                   -Body $jsonBody `
                   -ContentType "application/json"
           } catch {
-              Write-Error "Error sending commits to Power Automate: $_"
+              Write-Error "Error sending latest commit to Power Automate: $_"
           }
