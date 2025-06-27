@@ -381,6 +381,9 @@ jobs:
           shell: powershell
           telemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
           currentJobContext: ${{ toJson(job) }}
+
+      - name: Fetch full git history
+        run: git fetch --unshallow    
           
       - name: Send release notes to Power Automate
         run: |
