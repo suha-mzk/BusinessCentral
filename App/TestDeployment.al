@@ -1,29 +1,29 @@
-//page 50100 "Test Deployment"
-//{
-//    PageType = Card;
-//    ApplicationArea = All;
- //   Caption = 'Test Deployment';
- //   
-  //  layout
-  //  {
-  //      area(content)
-  //      {
-  //          group(Group)
- //           {
-  //              field(VersionMessage; VersionMessage)
-  //              {
-   //                 ApplicationArea = All;
-  //              }
-   //         }
-   //     }
-   // }
+page 20100 "Test Deployment"
+{
+    PageType = Card;
+    ApplicationArea = All;
+    Caption = 'Test Deployment';
+    
+    layout
+    {
+        area(content)
+        {
+            group(Group)
+            {
+                field(VersionMessage; VersionMessage)
+                {
+                    ApplicationArea = All;
+                }
+            }
+        }
+    }
 
-   // var
-   //     VersionMessage: Text;
+    var
+        VersionMessage: Text;
 
-   // trigger OnOpenPage()
-  //  begin
-  //      VersionMessage := '✅ Package deployed! Version: 1.0.0.0';
-  //      Message(VersionMessage);
-  //  end;
-//}
+    trigger OnOpenPage()
+    begin
+        VersionMessage := '✅ Package deployed! Version: 1.0.0.0';
+        Message(VersionMessage);
+    end;
+}
