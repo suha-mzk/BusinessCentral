@@ -1,0 +1,5 @@
+{
+  "type": "PTE",
+  "enableCodeCop": true,
+  "templateUrl": "https://github.com/microsoft/AL-Go-PTE@main"
+}
