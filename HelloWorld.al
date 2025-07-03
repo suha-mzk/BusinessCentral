@@ -6,7 +6,7 @@ pageextension 50148 CustomerListExt extends "Customer List"
 {
     trigger OnOpenPage();
     begin
-        Message('App published: Hello github worldd');
+        Message('App published: Hello github world');
     end;
 }
 
