@@ -1,0 +1,28 @@
+steps:
+  - script: |
+      echo "##[group]Set up Git config"
+      git config --global user.name "Azure DevOps Mirror Bot"
+      git config --global user.email "devops-bot@example.com"
+      echo "##[endgroup]"
+
+      echo "##[group]Clone ADO repo (mirror)"
+      git clone --mirror "$(ado_repo_url)" ado-mirror
+      cd ado-mirror
+      echo "##[endgroup]"
+
+      echo "##[group]Add GitHub remote"
+      git remote add github "$(github_repo_url)"
+      echo "##[endgroup]"
+
+      echo "##[group]Push to GitHub"
+      git push --mirror github
+      echo "##[endgroup]"
+
+      echo "##[group]Trigger GitHub Actions"
+      curl -X POST \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer $(github_pat)" \
+        https://api.github.com/repos/suha-mzk/BusinessCentral/actions/workflows/cicd.yaml/dispatches \
+        -d '{"ref": "main"}'
+      echo "##[endgroup]"
+    displayName: "Mirror ADO Repo and Trigger GitHub Actions"
