@@ -1,0 +1,31 @@
+trigger:
+  branches:
+    include:
+      - "*"
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  github_repo_url: "https://github.com/suha-mzk/BusinessCentral"
+
+steps:
+  - script: |
+      echo "##[group]Set up Git config"
+      git config --global user.name "Azure DevOps Mirror Bot"
+      git config --global user.email "devops-bot@example.com"
+      echo "##[endgroup]"
+
+      echo "##[group]Clone ADO repo"
+      git clone --mirror "https://$(ado_pat)@dev.azure.com/LPCH/_git/Mazik Nav to BC Upgrade"
+      cd Mazik\ Nav\ to\ BC\ Upgrade.git
+      echo "##[endgroup]"
+
+      echo "##[group]Add GitHub remote"
+      git remote add github "https://$(github_user):$(github_pat)@github.com/suha-mzk/BusinessCentral"
+      echo "##[endgroup]"
+
+      echo "##[group]Push to GitHub"
+      git push --mirror github
+      echo "##[endgroup]"
+    displayName: "Mirror ADO Repo to GitHub"
