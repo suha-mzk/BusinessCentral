@@ -9,6 +9,7 @@ pool:
 variables:
   ado_repo_url: "https://$(ado_pat)@dev.azure.com/LPCH/_git/Mazik%20Nav%20to%20BC%20Upgrade"
   github_repo_url: "https://$(github_user):$(github_pat)@github.com/suha-mzk/BusinessCentral"
+  github_api_url: "https://api.github.com/repos/suha-mzk/BusinessCentral/dispatches"
 
 steps:
   - script: |
@@ -30,3 +31,13 @@ steps:
       git push --mirror github
       echo "##[endgroup]"
     displayName: "Mirror ADO Repo to GitHub"
+
+  - script: |
+      echo "##[group]Trigger GitHub Actions workflow via repository_dispatch"
+      curl -X POST \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer $(github_pat)" \
+        "$(github_api_url)" \
+        -d '{"event_type":"from-ado"}'
+      echo "##[endgroup]"
+    displayName: "Trigger GitHub Actions Workflow"
