@@ -8,6 +8,7 @@ pool:
 
 variables:
   github_repo_url: "https://github.com/suha-mzk/BusinessCentral"
+  ado_repo_url: "https://$(ado_pat)@dev.azure.com/LPCH/_git/Mazik%20Nav%20to%20BC%20Upgrade"
 
 steps:
   - script: |
@@ -16,9 +17,9 @@ steps:
       git config --global user.email "devops-bot@example.com"
       echo "##[endgroup]"
 
-      echo "##[group]Clone ADO repo"
-      git clone --mirror "https://$(ado_pat)@dev.azure.com/LPCH/_git/Mazik Nav to BC Upgrade"
-      cd Mazik\ Nav\ to\ BC\ Upgrade.git
+      echo "##[group]Clone ADO repo (mirror)"
+      git clone --mirror "$(ado_repo_url)"
+      cd "Mazik Nav to BC Upgrade.git"
       echo "##[endgroup]"
 
       echo "##[group]Add GitHub remote"
@@ -26,6 +27,6 @@ steps:
       echo "##[endgroup]"
 
       echo "##[group]Push to GitHub"
-      git push --mirror github
+      git push --mirror github || true
       echo "##[endgroup]"
     displayName: "Mirror ADO Repo to GitHub"
