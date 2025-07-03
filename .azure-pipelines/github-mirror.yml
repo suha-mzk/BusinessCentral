@@ -7,8 +7,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  github_repo_url: "https://github.com/suha-mzk/BusinessCentral"
   ado_repo_url: "https://$(ado_pat)@dev.azure.com/LPCH/_git/Mazik%20Nav%20to%20BC%20Upgrade"
+  github_repo_url: "https://$(github_user):$(github_pat)@github.com/suha-mzk/BusinessCentral"
 
 steps:
   - script: |
@@ -18,15 +18,15 @@ steps:
       echo "##[endgroup]"
 
       echo "##[group]Clone ADO repo (mirror)"
-      git clone --mirror "$(ado_repo_url)"
-      cd "Mazik Nav to BC Upgrade.git"
+      git clone --mirror "$(ado_repo_url)" ado-mirror
+      cd ado-mirror
       echo "##[endgroup]"
 
       echo "##[group]Add GitHub remote"
-      git remote add github "https://$(github_user):$(github_pat)@github.com/suha-mzk/BusinessCentral"
+      git remote add github "$(github_repo_url)"
       echo "##[endgroup]"
 
       echo "##[group]Push to GitHub"
-      git push --mirror github || true
+      git push --mirror github
       echo "##[endgroup]"
     displayName: "Mirror ADO Repo to GitHub"
